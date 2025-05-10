@@ -1,0 +1,62 @@
+{
+  "name": "@mesmotronic/react-three-canvas",
+  "author": "Neil Rackett",
+  "license": "BSD-3-Clause",
+  "description": "React component that provides the boilerplate for embedding Three.js",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "dist/main.js",
+  "types": "dist/main.d.ts",
+  "private": false,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mesmotronic/react-three-canvas.git"
+  },
+  "files": [
+    "dist"
+  ],
+  "keywords": [
+    "react",
+    "three",
+    "threejs",
+    "mount",
+    "unmount",
+    "animate",
+    "embed"
+  ],
+  "bugs": {
+    "url": "https://github.com/mesmotronic/react-three-canvas/issues"
+  },
+  "homepage": "https://github.com/mesmotronic/react-three-canvas#readme",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b ./tsconfig.lib.json && vite build",
+    "lint": "eslint .",
+    "preview": "vite preview",
+    "prepublish": "npm run build"
+  },
+  "peerDependencies": {
+    "react": ">=18",
+    "react-dom": ">=18",
+    "three": ">=0.153"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.17.0",
+    "@types/node": "^22.13.4",
+    "@types/react": "^18.3.18",
+    "@types/react-dom": "^18.3.5",
+    "@types/three": "^0.176.0",
+    "@vitejs/plugin-react": "^4.3.4",
+    "eslint": "^9.17.0",
+    "eslint-plugin-react-hooks": "^5.0.0",
+    "eslint-plugin-react-refresh": "^0.4.16",
+    "globals": "^15.14.0",
+    "typescript": "~5.6.2",
+    "typescript-eslint": "^8.18.2",
+    "vite": "^6.0.5",
+    "vite-plugin-dts": "^4.5.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}
