@@ -1,4 +1,4 @@
-# Three.js Canvas for React
+# ThreeCanvas component for React
 
 A lightweight React component for rendering Three.js scenes with built-in post-processing support via `EffectComposer` and compatibility with WebXR for immersive VR/AR experiences. `ThreeCanvas` simplifies the integration of Three.js into React applications, providing a robust foundation for 3D rendering with automatic scene setup, camera configuration, and responsive resizing.
 
