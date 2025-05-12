@@ -20,7 +20,10 @@ export default defineConfig({
       external: [
         'react',
         'react-dom',
-        'react/jsx-runtime'
+        'react/jsx-runtime',
+        'three',
+        /^three\/addons\//,
+        /^three\/examples\//,
       ],
       output: {
         assetFileNames: 'assets/[name][extname]',
