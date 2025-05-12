@@ -39,7 +39,7 @@ export const ThreeCanvas: React.FC<ThreeCanvasProps> = ({
       antialias: true,
       canvas: canvasRef.current
     });
-    renderer.setSize(size.width, size.height);
+    renderer.setSize(size.width, size.height, false);
     renderer.setClearColor(0x000000);
 
     const camera = new THREE.PerspectiveCamera(
@@ -69,7 +69,7 @@ export const ThreeCanvas: React.FC<ThreeCanvasProps> = ({
 
     renderer.setAnimationLoop(() => {
       if (resizePending) {
-        renderer.setSize(size.width, size.height);
+        renderer.setSize(size.width, size.height, false);
         composer.setSize(size.width, size.height);
         camera.aspect = size.width / size.height;
         camera.updateProjectionMatrix();
