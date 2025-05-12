@@ -1,9 +1,9 @@
-import React, { MutableRefObject, useRef } from 'react';
+import React, { useRef } from 'react';
 import * as THREE from 'three';
 import { ThreeCanvas, ThreeCanvasCallbackProps } from '../lib/components/ThreeCanvas';
 
 const App: React.FC = () => {
-  const cubeRef = useRef<THREE.Mesh | null>(null) as MutableRefObject<THREE.Mesh | null>;
+  const state = useRef<{ cube?: THREE.Mesh; }>({});
 
   const mountHandler = ({ scene }: ThreeCanvasCallbackProps) => {
     const geometry = new THREE.BoxGeometry(1, 1, 1);
@@ -11,15 +11,15 @@ const App: React.FC = () => {
     const mesh = new THREE.Mesh(geometry, material);
     scene.add(mesh);
 
-    cubeRef.current = mesh;
+    state.current.cube = mesh;
   };
 
   const unmountHandler = () => {
-    cubeRef.current = null;
+    delete state.current.cube;
   };
 
   const animationFrameHandler = () => {
-    const cube = cubeRef.current!;
+    const cube = state.current.cube!;
     cube.rotation.x += 0.01;
     cube.rotation.y += 0.01;
   };
@@ -29,7 +29,7 @@ const App: React.FC = () => {
       onAnimationFrame={animationFrameHandler}
       onMount={mountHandler}
       onUnmount={unmountHandler}
-      style={{ width: '100vw', height: '100vh' }}
+      style={{ width: '100%', height: '100%' }}
     />
   );
 };

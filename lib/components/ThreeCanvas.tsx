@@ -4,53 +4,57 @@ import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
 import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
 
 export interface ThreeCanvasCallbackProps {
-  scene: THREE.Scene;
   canvas: HTMLCanvasElement;
   renderer: THREE.WebGLRenderer;
   camera: THREE.PerspectiveCamera;
   composer: EffectComposer;
+  scene: THREE.Scene;
 }
 
-export interface ThreeCanvasProps extends React.HTMLAttributes<HTMLDivElement> {
+export interface ThreeCanvasProps extends React.HTMLAttributes<HTMLCanvasElement> {
   onAnimationFrame?: (params: ThreeCanvasCallbackProps) => void;
   onMount?: (params: ThreeCanvasCallbackProps) => void;
   onUnmount?: () => void;
 }
 
+/**
+ * Create a Three.js canvas with a renderer, camera and scene
+ */
 export const ThreeCanvas: React.FC<ThreeCanvasProps> = ({
   onAnimationFrame = () => { },
   onMount = () => { },
   onUnmount = () => { },
   ...props
 }) => {
-  const containerRef = useRef<HTMLDivElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useLayoutEffect(() => {
-    if (!containerRef.current) return;
+    if (!canvasRef.current) return;
 
     const scene = new THREE.Scene();
 
-    const renderer = new THREE.WebGLRenderer({ antialias: true });
-    renderer.setSize(containerRef.current.clientWidth, containerRef.current.clientHeight);
-    renderer.setClearColor(0x000000); // Default clear color
-    const canvas = renderer.domElement;
-    containerRef.current.appendChild(canvas);
+    const renderer = new THREE.WebGLRenderer({
+      antialias: true,
+      canvas: canvasRef.current
+    });
+    renderer.setSize(canvasRef.current.clientWidth, canvasRef.current.clientHeight);
+    renderer.setClearColor(0x000000);
 
     const camera = new THREE.PerspectiveCamera(
       60,
-      containerRef.current.clientWidth / containerRef.current.clientHeight,
+      canvasRef.current.clientWidth / canvasRef.current.clientHeight,
       0.1,
       5000
     );
     camera.position.set(0, 0, 5);
 
     const composer = new EffectComposer(renderer);
-    composer.setSize(containerRef.current.clientWidth, containerRef.current.clientHeight);
+    composer.setSize(canvasRef.current.clientWidth, canvasRef.current.clientHeight);
 
     const renderPass = new RenderPass(scene, camera);
     composer.addPass(renderPass);
 
-    onMount?.({ scene, canvas, renderer, camera, composer });
+    onMount({ canvas: canvasRef.current, renderer, camera, composer, scene });
 
     const resizeObserver = new ResizeObserver((entries) => {
       const { width, height } = entries[0].contentRect;
@@ -59,23 +63,22 @@ export const ThreeCanvas: React.FC<ThreeCanvasProps> = ({
       camera.aspect = width / height;
       camera.updateProjectionMatrix();
     });
-    resizeObserver.observe(containerRef.current);
+    resizeObserver.observe(canvasRef.current);
 
     renderer.setAnimationLoop(() => {
-      onAnimationFrame?.({ scene, canvas, renderer, camera, composer });
+      onAnimationFrame({ canvas: canvasRef.current!, renderer, camera, composer, scene });
       composer.render();
     });
 
     return () => {
       resizeObserver.disconnect();
       renderer.setAnimationLoop(null);
-      canvas.remove();
       renderer.dispose();
-      onUnmount?.();
+      onUnmount();
     };
   }, [onAnimationFrame, onMount, onUnmount]);
 
-  return <div ref={containerRef} {...props} />;
+  return <canvas ref={canvasRef} {...props} />;
 };
 
 export default ThreeCanvas;
