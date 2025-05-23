@@ -14,7 +14,7 @@ export interface ThreeCanvasCallbackProps {
 
 export interface ThreeCanvasProps extends React.HTMLAttributes<HTMLCanvasElement> {
   onAnimationFrame?: (params: ThreeCanvasCallbackProps) => void;
-  onMount?: (params: ThreeCanvasCallbackProps) => void;
+  onMount?: (params: ThreeCanvasCallbackProps) => void | (() => void);
   onUnmount?: () => void;
   onResize?: (params: ThreeCanvasCallbackProps) => void;
 }
@@ -27,6 +27,7 @@ export const ThreeCanvas: React.FC<ThreeCanvasProps> = ({
   ...props
 }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const unmountRef = useRef<void | (() => void)>();
 
   useLayoutEffect(() => {
     if (!canvasRef.current) return;
@@ -58,7 +59,7 @@ export const ThreeCanvas: React.FC<ThreeCanvasProps> = ({
 
     let resizePending = false;
 
-    onMount?.({ canvas: canvasRef.current!, renderer, camera, composer, scene, size });
+    unmountRef.current = onMount?.({ canvas: canvasRef.current!, renderer, camera, composer, scene, size });
 
     const resizeObserver = new ResizeObserver((entries) => {
       const { width, height } = entries[0].contentRect;
@@ -85,6 +86,7 @@ export const ThreeCanvas: React.FC<ThreeCanvasProps> = ({
       resizeObserver.disconnect();
       renderer.setAnimationLoop(null);
       renderer.dispose();
+      unmountRef.current?.();
       onUnmount?.();
     };
   }, [onAnimationFrame, onMount, onUnmount, onResize]);
