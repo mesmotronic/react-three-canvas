@@ -10,23 +10,27 @@ export interface ThreeCanvasCallbackProps {
   composer: EffectComposer;
   scene: THREE.Scene;
   size: THREE.Vector2;
+  userData: Record<string, any>;
 }
 
 export interface ThreeCanvasProps extends React.HTMLAttributes<HTMLCanvasElement> {
   onAnimationFrame?: (params: ThreeCanvasCallbackProps) => void;
   onMount?: (params: ThreeCanvasCallbackProps) => void | (() => void);
-  onUnmount?: () => void;
+  onUnmount?: (params: ThreeCanvasCallbackProps) => void;
   onResize?: (params: ThreeCanvasCallbackProps) => void;
+  userData?: Record<string, any>;
 }
 
-export const ThreeCanvas: React.FC<ThreeCanvasProps> = ({
+export function ThreeCanvas({
   onAnimationFrame,
   onMount,
   onUnmount,
   onResize,
+  userData = {},
   ...props
-}) => {
+}: ThreeCanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const userDataRef = useRef<Record<string, any>>({});
   const unmountRef = useRef<void | (() => void)>();
 
   useLayoutEffect(() => {
@@ -59,7 +63,17 @@ export const ThreeCanvas: React.FC<ThreeCanvasProps> = ({
 
     let resizePending = false;
 
-    unmountRef.current = onMount?.({ canvas: canvasRef.current!, renderer, camera, composer, scene, size });
+    const callbackProps = {
+      canvas: canvasRef.current!,
+      renderer,
+      camera,
+      composer,
+      scene,
+      size,
+      userData: userDataRef.current
+    };
+
+    unmountRef.current = onMount?.(callbackProps);
 
     const resizeObserver = new ResizeObserver((entries) => {
       const { width, height } = entries[0].contentRect;
@@ -74,11 +88,11 @@ export const ThreeCanvas: React.FC<ThreeCanvasProps> = ({
         composer.setSize(size.width, size.height);
         camera.aspect = size.width / size.height;
         camera.updateProjectionMatrix();
-        onResize?.({ canvas: canvasRef.current!, renderer, camera, composer, scene, size });
+        onResize?.(callbackProps);
         resizePending = false;
       }
 
-      onAnimationFrame?.({ canvas: canvasRef.current!, renderer, camera, composer, scene, size });
+      onAnimationFrame?.(callbackProps);
       composer.render();
     });
 
@@ -87,7 +101,8 @@ export const ThreeCanvas: React.FC<ThreeCanvasProps> = ({
       renderer.setAnimationLoop(null);
       renderer.dispose();
       unmountRef.current?.();
-      onUnmount?.();
+      unmountRef.current = undefined;
+      onUnmount?.(callbackProps);
     };
   }, [onAnimationFrame, onMount, onUnmount, onResize]);
 

@@ -1,29 +1,27 @@
-import React, { useCallback, useRef } from 'react';
+import React, { useCallback } from 'react';
 import * as THREE from 'three';
 import { ThreeCanvas, ThreeCanvasCallbackProps } from '../lib/components/ThreeCanvas';
 
-interface AppState {
-  cube?: THREE.Mesh;
-}
-
 const App: React.FC = () => {
-  const state = useRef<AppState>({});
-
-  const mountHandler = useCallback(({ scene }: ThreeCanvasCallbackProps) => {
+  const mountHandler = useCallback(({ scene, userData }: ThreeCanvasCallbackProps) => {
     const geometry = new THREE.BoxGeometry(1, 1, 1);
     const material = new THREE.MeshBasicMaterial({ color: 0xff0000 });
     const mesh = new THREE.Mesh(geometry, material);
     scene.add(mesh);
 
-    state.current.cube = mesh;
+    userData.cube = mesh;
+
+    return () => {
+      console.log('Unmounting');
+    };
   }, []);
 
-  const unmountHandler = useCallback(() => {
-    delete state.current.cube;
+  const unmountHandler = useCallback(({ userData }: ThreeCanvasCallbackProps) => {
+    delete userData.cube;
   }, []);
 
-  const animationFrameHandler = useCallback(() => {
-    const cube = state.current.cube!;
+  const animationFrameHandler = useCallback(({ userData }: ThreeCanvasCallbackProps) => {
+    const { cube } = userData;
     cube.rotation.x += 0.01;
     cube.rotation.y += 0.01;
   }, []);
