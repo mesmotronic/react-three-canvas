@@ -18,7 +18,6 @@ export interface ThreeCanvasProps extends React.HTMLAttributes<HTMLCanvasElement
   onMount?: (params: ThreeCanvasCallbackProps) => void | (() => void);
   onUnmount?: (params: ThreeCanvasCallbackProps) => void;
   onResize?: (params: ThreeCanvasCallbackProps) => void;
-  userData?: Record<string, any>;
 }
 
 export function ThreeCanvas({
@@ -26,7 +25,6 @@ export function ThreeCanvas({
   onMount,
   onUnmount,
   onResize,
-  userData = {},
   ...props
 }: ThreeCanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -70,7 +68,7 @@ export function ThreeCanvas({
       composer,
       scene,
       size,
-      userData: userDataRef.current
+      userData: userDataRef.current!
     };
 
     unmountRef.current = onMount?.(callbackProps);
