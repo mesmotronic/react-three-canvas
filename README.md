@@ -17,31 +17,29 @@ The `ThreeCanvas` component provides a canvas for Three.js rendering with callba
 ### Basic Example
 
 ```jsx
-import React from 'react';
-import { ThreeCanvas } from '@mesmotronic/react-three-canvas';
-import * as THREE from 'three';
+import React from "react";
+import { ThreeCanvas } from "@mesmotronic/react-three-canvas";
+import * as THREE from "three";
 
 const App = () => {
-  const mountHandler = ({ scene, camera }) => {
+  const mountHandler = ({ scene, camera, userData }) => {
     const geometry = new THREE.BoxGeometry();
     const material = new THREE.MeshBasicMaterial({ color: 0xff0000 });
     const cube = new THREE.Mesh(geometry, material);
     scene.add(cube);
     camera.position.z = 5;
+    userData.cube = cube;
   };
 
-  const animationFrameHandler = ({ scene }) => {
-    scene.children.forEach((child) => {
-      if (child instanceof THREE.Mesh) {
-        child.rotation.x += 0.01;
-        child.rotation.y += 0.01;
-      }
-    });
+  const animationFrameHandler = ({ userData }) => {
+    const { cube } = userData;
+    cube.rotation.x += 0.01;
+    cube.rotation.y += 0.01;
   };
 
   return (
     <ThreeCanvas
-      style={{ width: '100vw', height: '100vh' }}
+      style={{ width: "100vw", height: "100vh" }}
       onMount={mountHandler}
       onAnimationFrame={animationFrameHandler}
     />
@@ -61,7 +59,7 @@ export default App;
 
 ### Callback props
 
-`onMount`, `onAnimationFrame`, and `onResize` receive `{ canvas: HTMLCanvasElement, renderer: THREE.WebGLRenderer, camera: THREE.PerspectiveCamera, composer: EffectComposer, scene: THREE.Scene, size: THREE.Vector2 }`.
+`onMount`, `onAnimationFrame`, `onResize` and `onUnmount` receive `{ canvas: HTMLCanvasElement, renderer: THREE.WebGLRenderer, camera: THREE.PerspectiveCamera, composer: EffectComposer, scene: THREE.Scene, size: THREE.Vector2, userData: Record<string,any> }`.
 
 ## Features
 
