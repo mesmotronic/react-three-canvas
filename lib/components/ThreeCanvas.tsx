@@ -3,14 +3,14 @@ import * as THREE from 'three';
 import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
 import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
 
-export interface ThreeCanvasCallbackProps {
+export interface ThreeCanvasCallbackProps<TUserData extends object = Record<string, any>> {
   canvas: HTMLCanvasElement;
   renderer: THREE.WebGLRenderer;
   camera: THREE.PerspectiveCamera;
   composer: EffectComposer;
   scene: THREE.Scene;
   size: THREE.Vector2;
-  userData: Record<string, any>;
+  userData: Partial<TUserData>;
 }
 
 export interface ThreeCanvasProps extends React.HTMLAttributes<HTMLCanvasElement> {
@@ -20,7 +20,7 @@ export interface ThreeCanvasProps extends React.HTMLAttributes<HTMLCanvasElement
   onResize?: (params: ThreeCanvasCallbackProps) => void;
 }
 
-export function ThreeCanvas({
+export function ThreeCanvas<TUserData extends object = Record<string, any>>({
   onAnimationFrame,
   onMount,
   onUnmount,
@@ -28,7 +28,7 @@ export function ThreeCanvas({
   ...props
 }: ThreeCanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const userDataRef = useRef<Record<string, any>>({});
+  const userDataRef = useRef<Partial<TUserData>>({});
   const unmountRef = useRef<void | (() => void)>();
 
   useLayoutEffect(() => {
@@ -61,14 +61,14 @@ export function ThreeCanvas({
 
     let resizePending = false;
 
-    const callbackProps = {
+    const callbackProps: ThreeCanvasCallbackProps<TUserData> = {
       canvas: canvasRef.current!,
       renderer,
       camera,
       composer,
       scene,
       size,
-      userData: userDataRef.current!
+      userData: userDataRef.current
     };
 
     unmountRef.current = onMount?.(callbackProps);
