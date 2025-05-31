@@ -14,7 +14,7 @@ export interface ThreeCanvasCallbackProps<TUserData extends object = Record<stri
 }
 
 export interface ThreeCanvasProps extends React.HTMLAttributes<HTMLCanvasElement> {
-  onAnimationFrame?: (params: ThreeCanvasCallbackProps) => void;
+  onAnimationFrame?: (params: ThreeCanvasCallbackProps) => boolean | void;
   onMount?: (params: ThreeCanvasCallbackProps) => void | (() => void);
   onUnmount?: (params: ThreeCanvasCallbackProps) => void;
   onResize?: (params: ThreeCanvasCallbackProps) => void;
@@ -90,8 +90,9 @@ export function ThreeCanvas<TUserData extends object = Record<string, any>>({
         resizePending = false;
       }
 
-      onAnimationFrame?.(callbackProps);
-      composer.render();
+      if (false !== onAnimationFrame?.(callbackProps)) {
+        composer.render();
+      }
     });
 
     return () => {
