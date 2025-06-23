@@ -20,6 +20,9 @@ export interface ThreeCanvasProps extends React.HTMLAttributes<HTMLCanvasElement
   onResize?: (params: ThreeCanvasCallbackProps) => void;
 }
 
+/**
+ * ThreeCanvas for WebGL
+ */
 export function ThreeCanvas<TUserData extends object = Record<string, any>>({
   onAnimationFrame,
   onMount,

@@ -1,6 +1,9 @@
 {
   "extends": "./tsconfig.app.json",
-  "include": [
-    "lib"
-  ]
+  "compilerOptions": {
+    "outDir": "dist",
+    "noEmit": false,
+    "declaration": true
+  },
+  "include": ["lib/**/*"]
 }
