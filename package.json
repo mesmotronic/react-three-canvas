@@ -2,11 +2,11 @@
   "name": "@mesmotronic/react-three-canvas",
   "author": "Neil Rackett",
   "license": "BSD-3-Clause",
-  "description": "React component that provides the boilerplate for embedding Three.js",
+  "description": "Makes it easy to embed vanilla Three.js into your React app",
   "version": "1.0.6",
   "type": "module",
-  "main": "dist/main.js",
-  "types": "dist/main.d.ts",
+  "main": "dist/webgl/ThreeCanvas.js",
+  "types": "dist/webgl/ThreeCanvas.d.ts",
   "private": false,
   "repository": {
     "type": "git",
@@ -15,6 +15,11 @@
   "files": [
     "dist"
   ],
+  "exports": {
+    ".": "./dist/index.js",
+    "./webgl": "./dist/webgl/ThreeCanvas.js",
+    "./webgpu": "./dist/webgpu/ThreeCanvas.js"
+  },
   "keywords": [
     "react",
     "three",
@@ -22,7 +27,9 @@
     "mount",
     "unmount",
     "animate",
-    "embed"
+    "embed",
+    "webgl",
+    "webgpu"
   ],
   "bugs": {
     "url": "https://github.com/mesmotronic/react-three-canvas/issues"
@@ -30,7 +37,7 @@
   "homepage": "https://github.com/mesmotronic/react-three-canvas#readme",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b ./tsconfig.lib.json && vite build",
+    "build": "tsc -b ./tsconfig.lib.json",
     "lint": "eslint .",
     "preview": "vite preview",
     "prepublish": "npm run build"
@@ -52,8 +59,7 @@
     "globals": "^15.14.0",
     "typescript": "~5.6.2",
     "typescript-eslint": "^8.18.2",
-    "vite": "^6.0.5",
-    "vite-plugin-dts": "^4.5.0"
+    "vite": "^6.0.5"
   },
   "publishConfig": {
     "access": "public"

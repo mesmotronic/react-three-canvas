@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react';
 import * as THREE from 'three';
-import { ThreeCanvas, ThreeCanvasCallbackProps } from '../lib/components/ThreeCanvas';
+import { ThreeCanvas, ThreeCanvasCallbackProps } from '../lib';
 
 type TUserData = { cube?: THREE.Mesh; };
 type TCallbackProps = ThreeCanvasCallbackProps<TUserData>;
