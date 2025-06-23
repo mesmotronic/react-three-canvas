@@ -3,7 +3,7 @@
   "author": "Neil Rackett",
   "license": "BSD-3-Clause",
   "description": "Makes it easy to embed vanilla Three.js into your React app",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "type": "module",
   "main": "dist/webgl/ThreeCanvas.js",
   "types": "dist/webgl/ThreeCanvas.d.ts",
@@ -16,7 +16,7 @@
     "dist"
   ],
   "exports": {
-    ".": "./dist/index.js",
+    ".": "./dist/webgl/ThreeCanvas.js",
     "./webgl": "./dist/webgl/ThreeCanvas.js",
     "./webgpu": "./dist/webgpu/ThreeCanvas.js"
   },
@@ -44,6 +44,7 @@
   },
   "peerDependencies": {
     "react": ">=16.8.0",
+    "react-dom": ">=16.8.0",
     "three": ">=0.128.0"
   },
   "devDependencies": {

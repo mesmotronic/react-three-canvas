@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react';
 import * as THREE from 'three';
-import { ThreeCanvas, ThreeCanvasCallbackProps } from '../lib';
+import { ThreeCanvas, ThreeCanvasCallbackProps } from '../lib/webgpu/ThreeCanvas';
 
 type TUserData = { cube?: THREE.Mesh; };
 type TCallbackProps = ThreeCanvasCallbackProps<TUserData>;
@@ -28,7 +28,7 @@ const App: React.FC = () => {
     cube.rotation.x += 0.01;
     cube.rotation.y += 0.01;
 
-    // Return false to prevent default render, e.g. if you're using an aleterative post-processing setup
+    // Return false to prevent default render, e.g. if you're using custom post-processing
   }, []);
 
   return (

@@ -12,7 +12,7 @@ from `@mesmotronic/react-three-canvas/webgpu` instead of `@mesmotronic/react-thr
 Install the package and peer dependencies:
 
 ```bash
-npm install @mesmotronic/react-three-canvas three react
+npm install @mesmotronic/react-three-canvas three react react-dom
 ```
 
 ## Usage
