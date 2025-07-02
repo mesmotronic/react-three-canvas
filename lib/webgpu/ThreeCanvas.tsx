@@ -43,6 +43,7 @@ export function ThreeCanvas<TUserData extends object = Record<string, any>>({
       antialias: true,
       canvas: canvasRef.current
     });
+    renderer.outputColorSpace = THREE.SRGBColorSpace;
     renderer.setSize(size.width, size.height, false);
     renderer.setClearColor(0x000000);
 

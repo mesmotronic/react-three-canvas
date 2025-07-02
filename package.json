@@ -1,9 +1,9 @@
 {
   "name": "@mesmotronic/react-three-canvas",
   "author": "Neil Rackett",
-  "license": "BSD-3-Clause",
+  "license": "BSD-2-Clause",
   "description": "Makes it easy to embed vanilla Three.js into your React app",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "type": "module",
   "main": "dist/webgl/ThreeCanvas.js",
   "types": "dist/webgl/ThreeCanvas.d.ts",
