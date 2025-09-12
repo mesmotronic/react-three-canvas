@@ -7,6 +7,9 @@ supports WebXR.
 This component provides a `WebGLRenderer` by default, but you can switch to `WebGPURenderer` simply by importing
 from `@mesmotronic/react-three-canvas/webgpu` instead of `@mesmotronic/react-three-canvas`.
 
+Integration is typically easier with class components, because of the way their lifecycle works, but it also
+works very well with functional components too.
+
 ## Installation
 
 Install the package and peer dependencies:
@@ -19,7 +22,7 @@ npm install @mesmotronic/react-three-canvas three react react-dom
 
 The `ThreeCanvas` component provides a canvas for Three.js rendering with callbacks for animation, mounting, unmounting, and resizing.
 
-### Basic Example
+### Example: functional component
 
 ```jsx
 import React from "react";
@@ -44,12 +47,49 @@ const App = () => {
 
   return (
     <ThreeCanvas
-      style={{ width: "100vw", height: "100vh" }}
+      style={{ width: "100%", height: "100%" }}
       onMount={mountHandler}
       onAnimationFrame={animationFrameHandler}
     />
   );
 };
+
+export default App;
+```
+
+### Example: class component
+
+```jsx
+import React, { PureComponent } from "react";
+import { ThreeCanvas } from "@mesmotronic/react-three-canvas";
+import * as THREE from "three";
+
+class App extends PureComponent {
+  mountHandler = ({ scene, camera }) => {
+    const geometry = new THREE.BoxGeometry();
+    const material = new THREE.MeshBasicMaterial({ color: 0xff0000 });
+    const cube = new THREE.Mesh(geometry, material);
+    scene.add(cube);
+    camera.position.z = 5;
+    this.cube = cube;
+  };
+
+  animationFrameHandler = ({}) => {
+    const { cube } = this;
+    cube.rotation.x += 0.01;
+    cube.rotation.y += 0.01;
+  };
+
+  render() {
+    return (
+      <ThreeCanvas
+        style={{ width: "100%", height: "100%" }}
+        onMount={this.mountHandler}
+        onAnimationFrame={this.animationFrameHandler}
+      />
+    );
+  }
+}
 
 export default App;
 ```
