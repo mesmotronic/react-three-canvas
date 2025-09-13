@@ -1,13 +1,8 @@
 # ThreeCanvas component for React
 
-Embedding vanilla Three.js into a React app can be a real pain, so here's a component that does all the
-integrating for you, providing a canvas, renderer, camera, scene and EffectComposer (WebGL only), and even
-supports WebXR.
+Whether you're looking to embed an existing project, or just prefer to work directly with Three.js, embedding vanilla Three.js into a React app can be a real pain, so here's a component that does all the integrating for you, providing a canvas, renderer, camera, scene and EffectComposer (WebGL only), and even supports WebXR.
 
-This component provides a `WebGLRenderer` by default, but you can switch to `WebGPURenderer` simply by importing
-from `@mesmotronic/react-three-canvas/webgpu` instead of `@mesmotronic/react-three-canvas`.
-
-It's typically easier to integrate Three.js into your React app using a class component, thanks to the way the lifecycle works, but this component will work happily with functional components too, although you will need to be more careful about how prop updates, etc, are handled.
+This component provides a `WebGLRenderer` by default, but you can switch to `WebGPURenderer` simply by importing from `@mesmotronic/react-three-canvas/webgpu` instead of `@mesmotronic/react-three-canvas`.
 
 ## Installation
 
@@ -21,9 +16,9 @@ npm install @mesmotronic/react-three-canvas three react react-dom
 
 The `ThreeCanvas` component provides a canvas for Three.js rendering with callbacks for animation, mounting, unmounting, and resizing.
 
-The quickest way to create a new component is to create a class extending `ThreeCanvasComponent`, which creates a `ThreeCanvas` that fills its container and provides overridable methods to easily handle the Three.js lifecycle.
-
 ### Example: Class component
+
+It's typically easier to integrate Three.js into your React app using a class component, and to make this as simple as possible, `ThreeCanvasComponent` is an easily extendible class component that creates a `ThreeCanvas` instance for you, plus easily overridable lifecycle methods that make it as easy as possible to get up and running:
 
 ```jsx
 import * as THREE from 'three';
