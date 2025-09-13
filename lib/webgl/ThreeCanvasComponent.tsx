@@ -2,10 +2,14 @@ import { PureComponent } from "react";
 import { ThreeCanvas, ThreeCanvasCallbackProps } from "./ThreeCanvas";
 
 export class ThreeCanvasComponent<TProps = any, TState = any, TUserData extends object = Record<string, any>> extends PureComponent<TProps, TState> {
-  public canvasDidMount = (_props: ThreeCanvasCallbackProps) => { };
-  public canvasWillAnimate = (_props: ThreeCanvasCallbackProps) => { };
-  public canvasDidResize = (_props: ThreeCanvasCallbackProps) => { };
-  public canvasWillUnmount = (_props: ThreeCanvasCallbackProps) => { };
+  // @ts-ignore
+  public canvasDidMount = (props: ThreeCanvasCallbackProps) => { };
+  // @ts-ignore
+  public canvasWillAnimate = (props: ThreeCanvasCallbackProps) => { };
+  // @ts-ignore
+  public canvasDidResize = (props: ThreeCanvasCallbackProps) => { };
+  // @ts-ignore
+  public canvasWillUnmount = (props: ThreeCanvasCallbackProps) => { };
 
   public override render() {
     return (
