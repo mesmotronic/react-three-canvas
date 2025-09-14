@@ -1,8 +1,10 @@
 # ThreeCanvas component for React
 
-Whether you're intending an existing project, or just prefer working directly with Three.js, embedding vanilla Three.js into a React app can be a real pain, so here's a component that does all the integrating for you, providing a canvas, renderer, camera, scene and EffectComposer (WebGL only), and even supports WebXR.
+Whether you're integrating an existing project, or just prefer working directly with Three.js, embedding vanilla Three.js into a React app can be a real pain.
 
-This component provides a `WebGLRenderer` by default, but you can switch to `WebGPURenderer` simply by importing from `@mesmotronic/react-three-canvas/webgpu` instead of `@mesmotronic/react-three-canvas`.
+So, here's a component that does all the integrating for you, providing a canvas, renderer, camera, scene and EffectComposer (WebGL only), and even supports WebXR.
+
+The component provides a `WebGLRenderer` by default, but you can switch to `WebGPURenderer` simply by importing from `@mesmotronic/react-three-canvas/webgpu` instead of `@mesmotronic/react-three-canvas`.
 
 ## Installation
 
@@ -14,11 +16,11 @@ npm install @mesmotronic/react-three-canvas three react react-dom
 
 ## Usage
 
-The `ThreeCanvas` component provides a canvas with a Three.js renderer attached, plus callbacks for animation, mounting, unmounting, and resizing.
+The `ThreeCanvas` component provides a canvas with a Three.js renderer attached, plus callbacks for animation, mounting, unmounting, and resizing, plus an EffectComposer for postprocessing (WebGL only).
 
 ### Example: Class component
 
-The lifecycle of a class component typically makes it a better choice for integrating Three.js into your React app, so to keep things as simple as possible, `ThreeCanvasComponent` provides an easily extendible class component that creates a `ThreeCanvas` for you that automatically fills its parent, with easily overridable lifecycle methods that make it as simple as possible to get up and running:
+The lifecycle of a class component makes it a better choice for integrating Three.js into your React app, so to keep things simple, `ThreeCanvasComponent` provides an easily extendible class containing a `ThreeCanvas` that automatically fills its parent and overridable lifecycle methods that follow the standard class component naming convention:
 
 ```jsx
 import * as THREE from 'three';
@@ -53,7 +55,7 @@ export default App;
 
 ### Example: Functional component
 
-If you prefer to stick with functional components, `ThreeCanvas` works perfectly with those too, although you have to take a little more careful with your props and hooks to ensure you maintain a single canvas instance:
+If you prefer functional components, `ThreeCanvas` works perfectly with those too, although you have to take a little more care with your props and hooks to ensure you maintain a single canvas instance:
 
 ```jsx
 import React from "react";
