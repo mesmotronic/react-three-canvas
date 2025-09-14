@@ -2,7 +2,7 @@
 
 This library is for anyone that wants use vanilla Three.js with React.
 
-Whether you're integrating an existing project, or just  don't want to use a wrapper framework, embedding vanilla Three.js into a React app can be a real pain.
+Whether you're embedding an existing project, or just  don't want to use a wrapper framework, adding vanilla Three.js into a React app can be a real pain.
 
 So, here's a component that does the integrating for you, providing a canvas, renderer, camera, scene and EffectComposer (WebGL only), and even supports WebXR.
 
