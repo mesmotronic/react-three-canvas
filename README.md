@@ -1,8 +1,10 @@
 # ThreeCanvas component for React
 
-Whether you're integrating an existing project, or just prefer working directly with Three.js, embedding vanilla Three.js into a React app can be a real pain.
+This library is for anyone that wants use vanilla Three.js with React.
 
-So, here's a component that does all the integrating for you, providing a canvas, renderer, camera, scene and EffectComposer (WebGL only), and even supports WebXR.
+Whether you're integrating an existing project, or just  don't want to use a wrapper framework, embedding vanilla Three.js into a React app can be a real pain.
+
+So, here's a component that does the integrating for you, providing a canvas, renderer, camera, scene and EffectComposer (WebGL only), and even supports WebXR.
 
 The component provides a `WebGLRenderer` by default, but you can switch to `WebGPURenderer` simply by importing from `@mesmotronic/react-three-canvas/webgpu` instead of `@mesmotronic/react-three-canvas`.
 
