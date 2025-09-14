@@ -1,6 +1,6 @@
 # ThreeCanvas component for React
 
-Whether you're looking to embed an existing project, or just prefer to work directly with Three.js, embedding vanilla Three.js into a React app can be a real pain, so here's a component that does all the integrating for you, providing a canvas, renderer, camera, scene and EffectComposer (WebGL only), and even supports WebXR.
+Whether you're intending an existing project, or just prefer working directly with Three.js, embedding vanilla Three.js into a React app can be a real pain, so here's a component that does all the integrating for you, providing a canvas, renderer, camera, scene and EffectComposer (WebGL only), and even supports WebXR.
 
 This component provides a `WebGLRenderer` by default, but you can switch to `WebGPURenderer` simply by importing from `@mesmotronic/react-three-canvas/webgpu` instead of `@mesmotronic/react-three-canvas`.
 
@@ -14,7 +14,7 @@ npm install @mesmotronic/react-three-canvas three react react-dom
 
 ## Usage
 
-The `ThreeCanvas` component provides a canvas for Three.js rendering with callbacks for animation, mounting, unmounting, and resizing.
+The `ThreeCanvas` component provides a canvas with a Three.js renderer attached, plus callbacks for animation, mounting, unmounting, and resizing.
 
 ### Example: Class component
 
@@ -22,7 +22,7 @@ The lifecycle of a class component typically makes it a better choice for integr
 
 ```jsx
 import * as THREE from 'three';
-import { ThreeCanvasCallbackProps, ThreeCanvasComponent } from '@mesmotronic/react-three-canvas';
+import { ThreeCanvasComponent } from '@mesmotronic/react-three-canvas';
 
 class App extends ThreeCanvasComponent {
   public override canvasDidMount = ({ scene }) => {
@@ -98,12 +98,12 @@ export default App;
 
 ### Callback props
 
-`onMount`, `onAnimationFrame`, `onResize` and `onUnmount`, as well as the class methods shown above, receive `{ canvas: HTMLCanvasElement, renderer: THREE.WebGLRenderer, camera: THREE.PerspectiveCamera, composer: EffectComposer, scene: THREE.Scene, size: THREE.Vector2, userData: Record<string,any> }`.
+`onMount`, `onAnimationFrame`, `onResize` and `onUnmount`, as well as the equivalent lifecycle methods shown above, receive `{ canvas: HTMLCanvasElement, renderer: THREE.WebGLRenderer, camera: THREE.PerspectiveCamera, composer: EffectComposer, scene: THREE.Scene, size: THREE.Vector2, userData: Record<string,any> }`.
 
 ## Features
 
 - Automatic canvas resizing with `ResizeObserver`
-- Integrated `EffectComposer` for post-processing effects
+- Integrated `EffectComposer` for post-processing effects (WebGL only)
 - WebXR support via `renderer.xr.enabled`
 - Clean resource disposal on unmount
 
