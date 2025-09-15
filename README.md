@@ -1,6 +1,6 @@
 # ThreeCanvas component for React
 
-Want to use vanilla Three.js in React without the hassle? This component does the heavy lifting for you: no wrappers, no fuss.
+Want to use vanilla Three.js in React without the hassle? This component does the heavy lifting for you: no frameworks, no fuss.
 
 Whether you're embedding an existing project or just want to avoid extra frameworks, adding Three.js to React can be a pain. This component gives you a ready-to-go canvas, renderer, camera, scene, and EffectComposer (WebGL only), with WebXR support built in.
 
@@ -63,31 +63,35 @@ Prefer functional components? `ThreeCanvas` works great there too! Just be sure 
 Tip: Use `useRef` or `useCallback` if you need to persist data between renders.
 
 ```jsx
-import React from "react";
-import { ThreeCanvas } from "@mesmotronic/react-three-canvas";
 import * as THREE from "three";
+import { ThreeCanvas } from "@mesmotronic/react-three-canvas";
 
 const App = () => {
-  const mountHandler = ({ scene, camera, userData }) => {
+  const mountHandler = useCallback(({ scene, camera, userData }) => {
     const geometry = new THREE.BoxGeometry();
     const material = new THREE.MeshBasicMaterial({ color: 0xff0000 });
     const cube = new THREE.Mesh(geometry, material);
     scene.add(cube);
     camera.position.z = 5;
     userData.cube = cube;
-  };
+  }, []);
 
-  const animationFrameHandler = ({ userData }) => {
+  const animationFrameHandler = useCallback(({ userData }) => {
     const { cube } = userData;
     cube.rotation.x += 0.01;
     cube.rotation.y += 0.01;
-  };
+  }, []);
+
+  const resizeHandler = useCallback(() => console.log("Resized"), []);
+  const unmountHandler = useCallback(() => console.log("Unmounting"), []);
 
   return (
     <ThreeCanvas
       style={{ width: "100%", height: "100%" }}
       onMount={mountHandler}
       onAnimationFrame={animationFrameHandler}
+      onResize={resizeHandler}
+      onUnmount={unmountHandler}
     />
   );
 };
