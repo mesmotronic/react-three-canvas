@@ -1,28 +1,29 @@
 # ThreeCanvas component for React
 
-This library is for anyone that wants use vanilla Three.js with React.
+Want to use vanilla Three.js in React without the hassle? This component does the heavy lifting for you: no wrappers, no fuss.
 
-Whether you're embedding an existing project, or just  don't want to use a wrapper framework, adding vanilla Three.js into a React app can be a real pain.
+Whether you're embedding an existing project or just want to avoid extra frameworks, adding Three.js to React can be a pain. This component gives you a ready-to-go canvas, renderer, camera, scene, and EffectComposer (WebGL only), with WebXR support built in.
 
-So, here's a component that does the integrating for you, providing a canvas, renderer, camera, scene and EffectComposer (WebGL only), and even supports WebXR.
-
-The component provides a `WebGLRenderer` by default, but you can switch to `WebGPURenderer` simply by importing from `@mesmotronic/react-three-canvas/webgpu` instead of `@mesmotronic/react-three-canvas`.
+By default, you get a `WebGLRenderer`, but you can switch to `WebGPURenderer` just by importing from `@mesmotronic/react-three-canvas/webgpu` instead of `@mesmotronic/react-three-canvas`.
 
 ## Installation
 
-Install the package and peer dependencies:
+Install the package (and peer dependencies if you don't already have them):
 
 ```bash
-npm install @mesmotronic/react-three-canvas three react react-dom
+npm install @mesmotronic/react-three-canvas
+
+# If you don't already have them:
+npm install three react react-dom
 ```
 
 ## Usage
 
-The `ThreeCanvas` component provides a canvas with a Three.js renderer attached, plus callbacks for animation, mounting, unmounting, and resizing, plus an EffectComposer for postprocessing (WebGL only).
+The `ThreeCanvas` component gives you a canvas with a Three.js renderer attached, plus callbacks for animation, mounting, unmounting, and resizing, and an EffectComposer for postprocessing (WebGL only).
 
 ### Example: Class component
 
-The lifecycle of a class component makes it a better choice for integrating Three.js into your React app, so to keep things simple, `ThreeCanvasComponent` provides an easily extendible class containing a `ThreeCanvas` that automatically fills its parent and overridable lifecycle methods that follow the standard class component naming convention:
+Class components are a great fit for integrating Three.js, so `ThreeCanvasComponent` gives you an extendible class with a `ThreeCanvas` that fills its parent. You can override any of the lifecycle methods below (they're all optional):
 
 ```jsx
 import * as THREE from 'three';
@@ -57,7 +58,9 @@ export default App;
 
 ### Example: Functional component
 
-If you prefer functional components, `ThreeCanvas` works perfectly with those too, although you have to take a little more care with your props and hooks to ensure you maintain a single canvas instance:
+Prefer functional components? `ThreeCanvas` works great there too! Just be sure to manage your props and hooks so you keep a single canvas instance.
+
+Tip: Use `useRef` or `useCallback` if you need to persist data between renders.
 
 ```jsx
 import React from "react";
@@ -92,17 +95,44 @@ const App = () => {
 export default App;
 ```
 
-## Props
+## Props and lifecycle methods
 
-- `onMount`: Callback on component mount
-- `onAnimationFrame`: Callback for each animation frame
-- `onResize`: Callback on canvas resize
-- `onUnmount`: Callback on component unmount
-- Other HTML canvas attributes (e.g., `style`, `className`) are passed to the canvas element
+| Prop               | Lifecycle method    | Type       | Description                        |
+| ------------------ | ------------------- | ---------- | ---------------------------------- |
+| `onMount`          | `canvasDidMount`    | `function` | Called when the component mounts   |
+| `onAnimationFrame` | `canvasWillAnimate` | `function` | Called on each animation frame     |
+| `onResize`         | `canvasDidResize`   | `function` | Called when the canvas resizes     |
+| `onUnmount`        | `canvasWillUnmount` | `function` | Called when the component unmounts |
+
+All other props (like `style`, `className`, etc.) are passed directly to the `<canvas>` element.
 
 ### Callback props
 
-`onMount`, `onAnimationFrame`, `onResize` and `onUnmount`, as well as the equivalent lifecycle methods shown above, receive `{ canvas: HTMLCanvasElement, renderer: THREE.WebGLRenderer, camera: THREE.PerspectiveCamera, composer: EffectComposer, scene: THREE.Scene, size: THREE.Vector2, userData: Record<string,any> }`.
+All callback props (`onMount`, `onAnimationFrame`, `onResize`, `onUnmount`) and their equivalent lifecycle methods receive a single argument of type `ThreeCanvasCallbackProps`:
+
+| Property   | Type                                      | Description                                        |
+| ---------- | ----------------------------------------- | -------------------------------------------------- |
+| `canvas`   | `HTMLCanvasElement`                       | The canvas element being rendered to               |
+| `renderer` | `THREE.WebGLRenderer` or `WebGPURenderer` | The Three.js renderer instance                     |
+| `camera`   | `THREE.PerspectiveCamera`                 | The camera used for rendering                      |
+| `composer` | `EffectComposer`                          | The EffectComposer for postprocessing (WebGL only) |
+| `scene`    | `THREE.Scene`                             | The Three.js scene                                 |
+| `size`     | `THREE.Vector2`                           | The current size of the canvas                     |
+| `userData` | `Record<string, any>`                     | A persistent object for your own data              |
+
+TypeScript:
+
+```ts
+type ThreeCanvasCallbackProps = {
+  canvas: HTMLCanvasElement;
+  renderer: THREE.WebGLRenderer;
+  camera: THREE.PerspectiveCamera;
+  composer: EffectComposer;
+  scene: THREE.Scene;
+  size: THREE.Vector2;
+  userData: Record<string, any>;
+};
+```
 
 ## Features
 
@@ -118,4 +148,4 @@ export default App;
 
 ## License
 
-BSD 3-Clause License
+BSD 2-Clause License
