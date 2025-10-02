@@ -122,6 +122,7 @@ All callback props (`onMount`, `onAnimationFrame`, `onResize`, `onUnmount`) and 
 | `composer` | `EffectComposer`                          | The EffectComposer for postprocessing (WebGL only) |
 | `scene`    | `THREE.Scene`                             | The Three.js scene                                 |
 | `size`     | `THREE.Vector2`                           | The current size of the canvas                     |
+| `clock`    | `THREE.Clock`                             | An instance of THREE.Clock for animation timing    |
 | `userData` | `Record<string, any>`                     | A persistent object for your own data              |
 
 TypeScript:

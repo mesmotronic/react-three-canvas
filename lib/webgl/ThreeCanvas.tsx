@@ -10,6 +10,7 @@ export interface ThreeCanvasCallbackProps<TUserData extends object = Record<stri
   composer: EffectComposer;
   scene: THREE.Scene;
   size: THREE.Vector2;
+  clock: THREE.Clock;
   userData: Partial<TUserData>;
 }
 
@@ -37,8 +38,8 @@ export function ThreeCanvas<TUserData extends object = Record<string, any>>({
   useLayoutEffect(() => {
     if (!canvasRef.current) return;
 
+    const clock = new THREE.Clock();
     const size = new THREE.Vector2(canvasRef.current.clientWidth, canvasRef.current.clientHeight);
-
     const scene = new THREE.Scene();
 
     const renderer = new THREE.WebGLRenderer({
@@ -72,6 +73,7 @@ export function ThreeCanvas<TUserData extends object = Record<string, any>>({
       composer,
       scene,
       size,
+      clock,
       userData: userDataRef.current
     };
 
@@ -105,6 +107,7 @@ export function ThreeCanvas<TUserData extends object = Record<string, any>>({
       renderer.dispose();
       unmountRef.current?.();
       unmountRef.current = undefined;
+      clock.stop();
       onUnmount?.(callbackProps);
     };
   }, [onAnimationFrame, onMount, onUnmount, onResize]);
