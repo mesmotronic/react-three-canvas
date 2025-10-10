@@ -3,7 +3,9 @@
   "compilerOptions": {
     "outDir": "dist",
     "noEmit": false,
-    "declaration": true
+    "declaration": true,
+    "noUnusedLocals": false,
+    "noUnusedParameters": false
   },
   "include": ["lib/**/*"]
 }
