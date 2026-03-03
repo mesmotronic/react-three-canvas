@@ -3,6 +3,8 @@ import * as THREE from 'three';
 import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
 import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
 
+type AnimationLoopCallback = (params: ThreeCanvasCallbackProps) => boolean | void;
+
 export interface ThreeCanvasCallbackProps<TUserData extends object = Record<string, any>> {
   canvas: HTMLCanvasElement;
   renderer: THREE.WebGLRenderer;
@@ -12,10 +14,13 @@ export interface ThreeCanvasCallbackProps<TUserData extends object = Record<stri
   size: THREE.Vector2;
   clock: THREE.Clock;
   userData: Partial<TUserData>;
+  setAnimationLoop?: (callback: AnimationLoopCallback) => void;
 }
 
 export interface ThreeCanvasProps extends React.HTMLAttributes<HTMLCanvasElement> {
-  onAnimationFrame?: (params: ThreeCanvasCallbackProps) => boolean | void;
+  /** @deprecated Use onAnimationLoop */
+  onAnimationFrame?: AnimationLoopCallback;
+  onAnimationLoop?: AnimationLoopCallback;
   onMount?: (params: ThreeCanvasCallbackProps) => void | (() => void);
   onUnmount?: (params: ThreeCanvasCallbackProps) => void;
   onResize?: (params: ThreeCanvasCallbackProps) => void;
@@ -26,6 +31,7 @@ export interface ThreeCanvasProps extends React.HTMLAttributes<HTMLCanvasElement
  */
 export function ThreeCanvas<TUserData extends object = Record<string, any>>({
   onAnimationFrame,
+  onAnimationLoop,
   onMount,
   onUnmount,
   onResize,
@@ -34,6 +40,11 @@ export function ThreeCanvas<TUserData extends object = Record<string, any>>({
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const userDataRef = useRef<Partial<TUserData>>({});
   const unmountRef = useRef<void | (() => void)>();
+  const animationLoopRef = useRef<void | AnimationLoopCallback>();
+
+  if (onAnimationFrame) {
+    onAnimationLoop ??= onAnimationFrame;
+  }
 
   useLayoutEffect(() => {
     if (!canvasRef.current) return;
@@ -74,7 +85,8 @@ export function ThreeCanvas<TUserData extends object = Record<string, any>>({
       scene,
       size,
       clock,
-      userData: userDataRef.current
+      userData: userDataRef.current,
+      setAnimationLoop: (callback) => animationLoopRef.current = callback
     };
 
     unmountRef.current = onMount?.(callbackProps);
@@ -96,8 +108,13 @@ export function ThreeCanvas<TUserData extends object = Record<string, any>>({
         resizePending = false;
       }
 
-      if (false !== onAnimationFrame?.(callbackProps)) {
-        composer.render();
+      if (false !== onAnimationLoop?.(callbackProps)) {
+        // Three.js does not currently support post-processing in WebXR using EffectComposer
+        if (renderer.xr.isPresenting) {
+          renderer.render(scene, camera);
+        } else {
+          composer.render();
+        }
       }
     });
 
@@ -110,7 +127,7 @@ export function ThreeCanvas<TUserData extends object = Record<string, any>>({
       clock.stop();
       onUnmount?.(callbackProps);
     };
-  }, [onAnimationFrame, onMount, onUnmount, onResize]);
+  }, [onAnimationLoop, onMount, onUnmount, onResize]);
 
   return <canvas ref={canvasRef} {...props} />;
 };

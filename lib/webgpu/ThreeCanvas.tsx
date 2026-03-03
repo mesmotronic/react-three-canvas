@@ -13,7 +13,9 @@ export interface ThreeCanvasCallbackProps<TUserData extends object = Record<stri
 }
 
 export interface ThreeCanvasProps extends React.HTMLAttributes<HTMLCanvasElement> {
+  /** @deprecated Use onAnimationLoop */
   onAnimationFrame?: (params: ThreeCanvasCallbackProps) => boolean | void;
+  onAnimationLoop?: (params: ThreeCanvasCallbackProps) => boolean | void;
   onMount?: (params: ThreeCanvasCallbackProps) => void | (() => void);
   onUnmount?: (params: ThreeCanvasCallbackProps) => void;
   onResize?: (params: ThreeCanvasCallbackProps) => void;
@@ -24,6 +26,7 @@ export interface ThreeCanvasProps extends React.HTMLAttributes<HTMLCanvasElement
  */
 export function ThreeCanvas<TUserData extends object = Record<string, any>>({
   onAnimationFrame,
+  onAnimationLoop,
   onMount,
   onUnmount,
   onResize,
@@ -32,6 +35,10 @@ export function ThreeCanvas<TUserData extends object = Record<string, any>>({
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const userDataRef = useRef<Partial<TUserData>>({});
   const unmountRef = useRef<void | (() => void)>();
+
+  if (onAnimationFrame) {
+    onAnimationLoop ??= onAnimationFrame;
+  }
 
   useLayoutEffect(() => {
     if (!canvasRef.current) return;
@@ -86,7 +93,7 @@ export function ThreeCanvas<TUserData extends object = Record<string, any>>({
         resizePending = false;
       }
 
-      if (false !== onAnimationFrame?.(callbackProps)) {
+      if (false !== onAnimationLoop?.(callbackProps)) {
         renderer.render(scene, camera);
       }
     });
@@ -100,7 +107,7 @@ export function ThreeCanvas<TUserData extends object = Record<string, any>>({
       clock.stop();
       onUnmount?.(callbackProps);
     };
-  }, [onAnimationFrame, onMount, onUnmount, onResize]);
+  }, [onAnimationLoop, onMount, onUnmount, onResize]);
 
   return <canvas ref={canvasRef} {...props} />;
 };
