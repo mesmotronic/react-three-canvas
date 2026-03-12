@@ -6,6 +6,11 @@ Whether you're embedding an existing project or just want to avoid extra framewo
 
 By default, you get a `WebGLRenderer`, but you can switch to `WebGPURenderer` just by importing from `@mesmotronic/react-three-canvas/webgpu` instead of `@mesmotronic/react-three-canvas`.
 
+## Requirements
+
+- Version 1.3 onwards implements the new `THREE.Timer`, so require Three.js r183 or later
+- If you're using Three.js r182 or older, use version 1.2 which uses `THREE.Clock` instead
+
 ## Installation
 
 Install the package (and peer dependencies if you don't already have them):
