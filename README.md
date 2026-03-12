@@ -89,7 +89,7 @@ const App = () => {
     <ThreeCanvas
       style={{ width: "100%", height: "100%" }}
       onMount={mountHandler}
-      onAnimationFrame={animationFrameHandler}
+      onAnimationLoop={animationFrameHandler}
       onResize={resizeHandler}
       onUnmount={unmountHandler}
     />
@@ -101,29 +101,29 @@ export default App;
 
 ## Props and lifecycle methods
 
-| Prop               | Lifecycle method    | Type       | Description                        |
-| ------------------ | ------------------- | ---------- | ---------------------------------- |
-| `onMount`          | `canvasDidMount`    | `function` | Called when the component mounts   |
-| `onAnimationFrame` | `canvasWillAnimate` | `function` | Called on each animation frame     |
-| `onResize`         | `canvasDidResize`   | `function` | Called when the canvas resizes     |
-| `onUnmount`        | `canvasWillUnmount` | `function` | Called when the component unmounts |
+| Prop              | Lifecycle method    | Type       | Description                        |
+| ----------------- | ------------------- | ---------- | ---------------------------------- |
+| `onMount`         | `canvasDidMount`    | `function` | Called when the component mounts   |
+| `onAnimationLoop` | `canvasWillAnimate` | `function` | Called on each animation frame     |
+| `onResize`        | `canvasDidResize`   | `function` | Called when the canvas resizes     |
+| `onUnmount`       | `canvasWillUnmount` | `function` | Called when the component unmounts |
 
 All other props (like `style`, `className`, etc.) are passed directly to the `<canvas>` element.
 
 ### Callback props
 
-All callback props (`onMount`, `onAnimationFrame`, `onResize`, `onUnmount`) and their equivalent lifecycle methods receive a single argument of type `ThreeCanvasCallbackProps`:
+All callback props (`onMount`, `onAnimationLoop`, `onResize`, `onUnmount`) and their equivalent lifecycle methods receive a single argument of type `ThreeCanvasCallbackProps`:
 
-| Property   | Type                                      | Description                                        |
-| ---------- | ----------------------------------------- | -------------------------------------------------- |
-| `canvas`   | `HTMLCanvasElement`                       | The canvas element being rendered to               |
-| `renderer` | `THREE.WebGLRenderer` or `WebGPURenderer` | The Three.js renderer instance                     |
-| `camera`   | `THREE.PerspectiveCamera`                 | The camera used for rendering                      |
-| `composer` | `EffectComposer`                          | The EffectComposer for postprocessing (WebGL only) |
-| `scene`    | `THREE.Scene`                             | The Three.js scene                                 |
-| `size`     | `THREE.Vector2`                           | The current size of the canvas                     |
-| `clock`    | `THREE.Clock`                             | An instance of THREE.Clock for animation timing    |
-| `userData` | `Record<string, any>`                     | A persistent object for your own data              |
+| Property   | Type                                      | Description                                             |
+| ---------- | ----------------------------------------- | ------------------------------------------------------- |
+| `canvas`   | `HTMLCanvasElement`                       | The canvas element being rendered to                    |
+| `renderer` | `THREE.WebGLRenderer` or `WebGPURenderer` | The Three.js renderer instance                          |
+| `camera`   | `THREE.PerspectiveCamera`                 | The camera used for rendering                           |
+| `composer` | `EffectComposer`                          | The EffectComposer for postprocessing (WebGL only)      |
+| `scene`    | `THREE.Scene`                             | The Three.js scene                                      |
+| `size`     | `THREE.Vector2`                           | The current size of the canvas                          |
+| `timer`    | `THREE.Timer`                             | An updated instance of THREE.Timer for animation timing |
+| `userData` | `Record<string, any>`                     | A persistent object for your own data                   |
 
 TypeScript:
 

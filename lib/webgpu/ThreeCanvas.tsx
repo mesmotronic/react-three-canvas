@@ -8,13 +8,11 @@ export interface ThreeCanvasCallbackProps<TUserData extends object = Record<stri
   camera: THREE.PerspectiveCamera;
   scene: THREE.Scene;
   size: THREE.Vector2;
-  clock: THREE.Clock;
+  timer: THREE.Timer;
   userData: Partial<TUserData>;
 }
 
 export interface ThreeCanvasProps extends React.HTMLAttributes<HTMLCanvasElement> {
-  /** @deprecated Use onAnimationLoop */
-  onAnimationFrame?: (params: ThreeCanvasCallbackProps) => boolean | void;
   onAnimationLoop?: (params: ThreeCanvasCallbackProps) => boolean | void;
   onMount?: (params: ThreeCanvasCallbackProps) => void | (() => void);
   onUnmount?: (params: ThreeCanvasCallbackProps) => void;
@@ -25,7 +23,6 @@ export interface ThreeCanvasProps extends React.HTMLAttributes<HTMLCanvasElement
  * ThreeCanvas for WebGPU
  */
 export function ThreeCanvas<TUserData extends object = Record<string, any>>({
-  onAnimationFrame,
   onAnimationLoop,
   onMount,
   onUnmount,
@@ -36,14 +33,10 @@ export function ThreeCanvas<TUserData extends object = Record<string, any>>({
   const userDataRef = useRef<Partial<TUserData>>({});
   const unmountRef = useRef<void | (() => void)>();
 
-  if (onAnimationFrame) {
-    onAnimationLoop ??= onAnimationFrame;
-  }
-
   useLayoutEffect(() => {
     if (!canvasRef.current) return;
 
-    const clock = new THREE.Clock();
+    const timer = new THREE.Timer();
     const size = new THREE.Vector2(canvasRef.current.clientWidth, canvasRef.current.clientHeight);
     const scene = new THREE.Scene();
 
@@ -71,7 +64,7 @@ export function ThreeCanvas<TUserData extends object = Record<string, any>>({
       camera,
       scene,
       size,
-      clock,
+      timer,
       userData: userDataRef.current
     };
 
@@ -84,7 +77,9 @@ export function ThreeCanvas<TUserData extends object = Record<string, any>>({
     });
     resizeObserver.observe(canvasRef.current);
 
-    renderer.setAnimationLoop(() => {
+    renderer.setAnimationLoop((timestamp: number) => {
+      timer.update(timestamp);
+
       if (resizePending) {
         renderer.setSize(size.width, size.height, false);
         camera.aspect = size.width / size.height;
@@ -104,7 +99,6 @@ export function ThreeCanvas<TUserData extends object = Record<string, any>>({
       renderer.dispose();
       unmountRef.current?.();
       unmountRef.current = undefined;
-      clock.stop();
       onUnmount?.(callbackProps);
     };
   }, [onAnimationLoop, onMount, onUnmount, onResize]);

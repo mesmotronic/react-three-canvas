@@ -34,7 +34,7 @@ const Example: React.FC = () => {
 
   return (
     <ThreeCanvas<TUserData>
-      onAnimationFrame={animationFrameHandler}
+      onAnimationLoop={animationFrameHandler}
       onMount={mountHandler}
       onUnmount={unmountHandler}
       style={{ width: '100%', height: '100%' }}
