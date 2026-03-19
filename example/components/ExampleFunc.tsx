@@ -7,8 +7,8 @@ type TCallbackProps = ThreeCanvasCallbackProps<TUserData>;
 
 const Example: React.FC = () => {
   const mountHandler = useCallback(({ scene, userData }: TCallbackProps) => {
-    const geometry = new THREE.BoxGeometry(1, 1, 1);
-    const material = new THREE.MeshBasicMaterial({ color: 0xff0000 });
+    const geometry = new THREE.TorusKnotGeometry(0.6, 0.2, 128, 32);
+    const material = new THREE.MeshNormalMaterial();
     const mesh = new THREE.Mesh(geometry, material);
     scene.add(mesh);
 
