@@ -18,6 +18,7 @@ export interface ThreeCanvasCallbackProps<TUserData extends object = Record<stri
 }
 
 export interface ThreeCanvasProps extends React.HTMLAttributes<HTMLCanvasElement> {
+  rendererParameters?: THREE.WebGLRendererParameters;
   onAnimationLoop?: AnimationLoopCallback;
   onMount?: (params: ThreeCanvasCallbackProps) => void | (() => void);
   onUnmount?: (params: ThreeCanvasCallbackProps) => void;
@@ -28,6 +29,7 @@ export interface ThreeCanvasProps extends React.HTMLAttributes<HTMLCanvasElement
  * ThreeCanvas for WebGL
  */
 export function ThreeCanvas<TUserData extends object = Record<string, any>>({
+  rendererParameters,
   onAnimationLoop,
   onMount,
   onUnmount,
@@ -48,6 +50,7 @@ export function ThreeCanvas<TUserData extends object = Record<string, any>>({
 
     const renderer = new THREE.WebGLRenderer({
       antialias: true,
+      ...rendererParameters,
       canvas: canvasRef.current
     });
     renderer.outputColorSpace = THREE.SRGBColorSpace;

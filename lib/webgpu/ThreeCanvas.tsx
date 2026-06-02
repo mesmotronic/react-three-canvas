@@ -1,5 +1,6 @@
 import React, { useLayoutEffect, useRef } from 'react';
 import * as THREE from 'three';
+import { WebGPURendererParameters } from 'three/src/renderers/webgpu/WebGPURenderer.js';
 import { WebGPURenderer } from 'three/webgpu';
 
 export interface ThreeCanvasCallbackProps<TUserData extends object = Record<string, any>> {
@@ -13,6 +14,7 @@ export interface ThreeCanvasCallbackProps<TUserData extends object = Record<stri
 }
 
 export interface ThreeCanvasProps extends React.HTMLAttributes<HTMLCanvasElement> {
+  rendererParameters?: WebGPURendererParameters;
   onAnimationLoop?: (params: ThreeCanvasCallbackProps) => boolean | void;
   onMount?: (params: ThreeCanvasCallbackProps) => void | (() => void);
   onUnmount?: (params: ThreeCanvasCallbackProps) => void;
@@ -23,6 +25,7 @@ export interface ThreeCanvasProps extends React.HTMLAttributes<HTMLCanvasElement
  * ThreeCanvas for WebGPU
  */
 export function ThreeCanvas<TUserData extends object = Record<string, any>>({
+  rendererParameters,
   onAnimationLoop,
   onMount,
   onUnmount,
@@ -42,6 +45,7 @@ export function ThreeCanvas<TUserData extends object = Record<string, any>>({
 
     const renderer = new WebGPURenderer({
       antialias: true,
+      ...rendererParameters,
       canvas: canvasRef.current
     });
     renderer.outputColorSpace = THREE.SRGBColorSpace;

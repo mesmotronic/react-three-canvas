@@ -28,13 +28,17 @@ The `ThreeCanvas` component gives you a canvas with a Three.js renderer attached
 
 ### Example: Class component
 
-Class components are a great fit for integrating Three.js, so `ThreeCanvasComponent` gives you an extendible class with a `ThreeCanvas` that fills its parent. You can override any of the lifecycle methods below (they're all optional):
+Class components are a great fit for integrating Three.js, so `ThreeCanvasComponent` gives you an extendible class with a `ThreeCanvas` that fills its parent. You can override any of the lifecycle methods below (they're all optional), and customize the renderer through `this.rendererParameters`:
 
 ```jsx
 import * as THREE from 'three';
 import { ThreeCanvasComponent } from '@mesmotronic/react-three-canvas';
 
 class App extends ThreeCanvasComponent {
+  public override rendererParameters = {
+    antialias: true,
+  };
+
   public override canvasDidMount = ({ scene }) => {
     const geometry = new THREE.BoxGeometry(1, 1, 1);
     const material = new THREE.MeshBasicMaterial({ color: 0xff0000 });
@@ -93,6 +97,7 @@ const App = () => {
   return (
     <ThreeCanvas
       style={{ width: "100%", height: "100%" }}
+      rendererParameters={{ antialias: true }}
       onMount={mountHandler}
       onAnimationLoop={animationFrameHandler}
       onResize={resizeHandler}
@@ -106,12 +111,13 @@ export default App;
 
 ## Props and lifecycle methods
 
-| Prop              | Lifecycle method    | Type       | Description                        |
-| ----------------- | ------------------- | ---------- | ---------------------------------- |
-| `onMount`         | `canvasDidMount`    | `function` | Called when the component mounts   |
-| `onAnimationLoop` | `canvasWillAnimate` | `function` | Called on each animation frame     |
-| `onResize`        | `canvasDidResize`   | `function` | Called when the canvas resizes     |
-| `onUnmount`       | `canvasWillUnmount` | `function` | Called when the component unmounts |
+| Prop                 | Lifecycle method     | Type                                                          | Description                                         |
+| -------------------- | -------------------- | ------------------------------------------------------------- | --------------------------------------------------- |
+| `onMount`            | `canvasDidMount`     | `function`                                                    | Called when the component mounts                    |
+| `onAnimationLoop`    | `canvasWillAnimate`  | `function`                                                    | Called on each animation frame                      |
+| `onResize`           | `canvasDidResize`    | `function`                                                    | Called when the canvas resizes                      |
+| `onUnmount`          | `canvasWillUnmount`  | `function`                                                    | Called when the component unmounts                  |
+| `rendererParameters` | `rendererParameters` | `THREE.WebGLRendererParameters` or `WebGPURendererParameters` | Passed through to the Three.js renderer constructor |
 
 All other props (like `style`, `className`, etc.) are passed directly to the `<canvas>` element.
 
