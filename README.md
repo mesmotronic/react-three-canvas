@@ -156,6 +156,7 @@ type ThreeCanvasCallbackProps = {
 - Integrated `EffectComposer` for post-processing effects (WebGL only)
 - WebXR support via `renderer.xr.enabled`
 - Clean resource disposal on unmount
+- Safe under React's StrictMode: the renderer survives StrictMode's remount, and any re-run caused by a change of callback, and is only disposed after `onUnmount`, so your callbacks can still free their own GPU resources
 
 ## Peer Dependencies
 

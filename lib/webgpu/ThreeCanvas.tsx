@@ -35,22 +35,35 @@ export function ThreeCanvas<TUserData extends object = Record<string, any>>({
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const userDataRef = useRef<Partial<TUserData>>({});
   const unmountRef = useRef<void | (() => void)>();
+  const rendererRef = useRef<WebGPURenderer>();
+  const disposeTimeoutRef = useRef<ReturnType<typeof setTimeout>>();
 
   useLayoutEffect(() => {
     if (!canvasRef.current) return;
 
+    // React can run this effect again on the same canvas: StrictMode does in
+    // development, and so does any change of callback. Disposing the renderer
+    // in between would take the canvas's context with it (the WebGL fallback
+    // deliberately loses it), leaving the next renderer unable to draw, so the
+    // renderer is only disposed if the effect hasn't run again by the next task.
+    clearTimeout(disposeTimeoutRef.current);
+
+    if (!rendererRef.current) {
+      rendererRef.current = new WebGPURenderer({
+        antialias: true,
+        ...rendererParameters,
+        canvas: canvasRef.current
+      });
+      rendererRef.current.outputColorSpace = THREE.SRGBColorSpace;
+      rendererRef.current.setClearColor(0x000000);
+    }
+
+    const renderer = rendererRef.current;
     const timer = new THREE.Timer();
     const size = new THREE.Vector2(canvasRef.current.clientWidth, canvasRef.current.clientHeight);
     const scene = new THREE.Scene();
 
-    const renderer = new WebGPURenderer({
-      antialias: true,
-      ...rendererParameters,
-      canvas: canvasRef.current
-    });
-    renderer.outputColorSpace = THREE.SRGBColorSpace;
     renderer.setSize(size.width, size.height, false);
-    renderer.setClearColor(0x000000);
 
     const camera = new THREE.PerspectiveCamera(
       60,
@@ -100,10 +113,14 @@ export function ThreeCanvas<TUserData extends object = Record<string, any>>({
     return () => {
       resizeObserver.disconnect();
       renderer.setAnimationLoop(null);
-      renderer.dispose();
       unmountRef.current?.();
       unmountRef.current = undefined;
       onUnmount?.(callbackProps);
+
+      disposeTimeoutRef.current = setTimeout(() => {
+        renderer.dispose();
+        rendererRef.current = undefined;
+      });
     };
   }, [onAnimationLoop, onMount, onUnmount, onResize]);
 
