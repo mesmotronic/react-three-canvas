@@ -3,7 +3,9 @@ import * as THREE from 'three';
 import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
 import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
 
-type AnimationLoopCallback = (params: ThreeCanvasCallbackProps) => boolean | void;
+export type ThreeCanvasCallback<TUserData extends object = Record<string, any>, TResult = void> = (
+  props: ThreeCanvasCallbackProps<TUserData>,
+) => TResult;
 
 export interface ThreeCanvasCallbackProps<TUserData extends object = Record<string, any>> {
   canvas: HTMLCanvasElement;
@@ -14,15 +16,14 @@ export interface ThreeCanvasCallbackProps<TUserData extends object = Record<stri
   size: THREE.Vector2;
   timer: THREE.Timer;
   userData: Partial<TUserData>;
-  setAnimationLoop?: (callback: AnimationLoopCallback) => void;
 }
 
-export interface ThreeCanvasProps extends React.HTMLAttributes<HTMLCanvasElement> {
+export interface ThreeCanvasProps<TUserData extends object = Record<string, any>> extends React.CanvasHTMLAttributes<HTMLCanvasElement> {
   rendererParameters?: THREE.WebGLRendererParameters;
-  onAnimationLoop?: AnimationLoopCallback;
-  onMount?: (params: ThreeCanvasCallbackProps) => void | (() => void);
-  onUnmount?: (params: ThreeCanvasCallbackProps) => void;
-  onResize?: (params: ThreeCanvasCallbackProps) => void;
+  onAnimationLoop?: ThreeCanvasCallback<TUserData, boolean | void>;
+  onMount?: ThreeCanvasCallback<TUserData, void | (() => void)>;
+  onUnmount?: ThreeCanvasCallback<TUserData>;
+  onResize?: ThreeCanvasCallback<TUserData>;
 }
 
 /**
@@ -35,11 +36,10 @@ export function ThreeCanvas<TUserData extends object = Record<string, any>>({
   onUnmount,
   onResize,
   ...props
-}: ThreeCanvasProps) {
+}: ThreeCanvasProps<TUserData>) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const userDataRef = useRef<Partial<TUserData>>({});
   const unmountRef = useRef<void | (() => void)>();
-  const animationLoopRef = useRef<void | AnimationLoopCallback>();
   const rendererRef = useRef<THREE.WebGLRenderer>();
   const disposeTimeoutRef = useRef<ReturnType<typeof setTimeout>>();
 
@@ -89,8 +89,7 @@ export function ThreeCanvas<TUserData extends object = Record<string, any>>({
       scene,
       size,
       timer,
-      userData: userDataRef.current,
-      setAnimationLoop: (callback) => animationLoopRef.current = callback
+      userData: userDataRef.current
     };
 
     unmountRef.current = onMount?.(callbackProps);

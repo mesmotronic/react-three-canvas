@@ -3,6 +3,10 @@ import * as THREE from 'three';
 import { WebGPURendererParameters } from 'three/src/renderers/webgpu/WebGPURenderer.js';
 import { WebGPURenderer } from 'three/webgpu';
 
+export type ThreeCanvasCallback<TUserData extends object = Record<string, any>, TResult = void> = (
+  props: ThreeCanvasCallbackProps<TUserData>,
+) => TResult;
+
 export interface ThreeCanvasCallbackProps<TUserData extends object = Record<string, any>> {
   canvas: HTMLCanvasElement;
   renderer: WebGPURenderer;
@@ -13,12 +17,12 @@ export interface ThreeCanvasCallbackProps<TUserData extends object = Record<stri
   userData: Partial<TUserData>;
 }
 
-export interface ThreeCanvasProps extends React.HTMLAttributes<HTMLCanvasElement> {
+export interface ThreeCanvasProps<TUserData extends object = Record<string, any>> extends React.CanvasHTMLAttributes<HTMLCanvasElement> {
   rendererParameters?: WebGPURendererParameters;
-  onAnimationLoop?: (params: ThreeCanvasCallbackProps) => boolean | void;
-  onMount?: (params: ThreeCanvasCallbackProps) => void | (() => void);
-  onUnmount?: (params: ThreeCanvasCallbackProps) => void;
-  onResize?: (params: ThreeCanvasCallbackProps) => void;
+  onAnimationLoop?: ThreeCanvasCallback<TUserData, boolean | void>;
+  onMount?: ThreeCanvasCallback<TUserData, void | (() => void)>;
+  onUnmount?: ThreeCanvasCallback<TUserData>;
+  onResize?: ThreeCanvasCallback<TUserData>;
 }
 
 /**
@@ -31,7 +35,7 @@ export function ThreeCanvas<TUserData extends object = Record<string, any>>({
   onUnmount,
   onResize,
   ...props
-}: ThreeCanvasProps) {
+}: ThreeCanvasProps<TUserData>) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const userDataRef = useRef<Partial<TUserData>>({});
   const unmountRef = useRef<void | (() => void)>();

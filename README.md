@@ -119,7 +119,7 @@ export default App;
 | `onUnmount`          | `canvasWillUnmount`  | `function`                                                    | Called when the component unmounts                  |
 | `rendererParameters` | `rendererParameters` | `THREE.WebGLRendererParameters` or `WebGPURendererParameters` | Passed through to the Three.js renderer constructor |
 
-All other props (like `style`, `className`, etc.) are passed directly to the `<canvas>` element.
+All other props (like `style`, `className`, etc.) are passed directly to the `<canvas>` element; in a `ThreeCanvasComponent`, set them in `this.canvasProps`.
 
 ### Callback props
 
@@ -134,20 +134,21 @@ All callback props (`onMount`, `onAnimationLoop`, `onResize`, `onUnmount`) and t
 | `scene`    | `THREE.Scene`                             | The Three.js scene                                      |
 | `size`     | `THREE.Vector2`                           | The current size of the canvas                          |
 | `timer`    | `THREE.Timer`                             | An updated instance of THREE.Timer for animation timing |
-| `userData` | `Record<string, any>`                     | A persistent object for your own data                   |
+| `userData` | `Partial<TUserData>`                      | A persistent object for your own data                   |
 
 TypeScript:
 
 ```ts
-type ThreeCanvasCallbackProps = {
+interface ThreeCanvasCallbackProps<TUserData extends object = Record<string, any>> {
   canvas: HTMLCanvasElement;
   renderer: THREE.WebGLRenderer;
   camera: THREE.PerspectiveCamera;
   composer: EffectComposer;
   scene: THREE.Scene;
   size: THREE.Vector2;
-  userData: Record<string, any>;
-};
+  timer: THREE.Timer;
+  userData: Partial<TUserData>;
+}
 ```
 
 ## Features
