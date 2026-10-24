@@ -41,11 +41,6 @@ export function ThreeCanvas<TUserData extends object = Record<string, any>>({
   useLayoutEffect(() => {
     if (!canvasRef.current) return;
 
-    // React can run this effect again on the same canvas: StrictMode does in
-    // development, and so does any change of callback. Disposing the renderer
-    // in between would take the canvas's context with it (the WebGL fallback
-    // deliberately loses it), leaving the next renderer unable to draw, so the
-    // renderer is only disposed if the effect hasn't run again by the next task.
     clearTimeout(disposeTimeoutRef.current);
 
     if (!rendererRef.current) {

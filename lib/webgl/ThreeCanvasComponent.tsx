@@ -4,10 +4,10 @@ import { ThreeCanvas, ThreeCanvasCallbackProps } from "./ThreeCanvas";
 
 export class ThreeCanvasComponent<TProps = any, TState = any, TUserData extends object = Record<string, any>> extends PureComponent<TProps, TState> {
   public rendererParameters: THREE.WebGLRendererParameters = {};
-  public canvasDidMount = (props: ThreeCanvasCallbackProps) => { };
-  public canvasWillAnimate = (props: ThreeCanvasCallbackProps) => { };
-  public canvasDidResize = (props: ThreeCanvasCallbackProps) => { };
-  public canvasWillUnmount = (props: ThreeCanvasCallbackProps) => { };
+  public canvasDidMount = (props: ThreeCanvasCallbackProps): (void | (() => void)) => { };
+  public canvasWillAnimate = (props: ThreeCanvasCallbackProps): boolean | void => { };
+  public canvasDidResize = (props: ThreeCanvasCallbackProps): void => { };
+  public canvasWillUnmount = (props: ThreeCanvasCallbackProps): void => { };
 
   public override render() {
     return (
